@@ -10,11 +10,28 @@ var rock = document.querySelector("#rockId");
 var paper = document.querySelector("#paperId");
 var scissors = document.querySelector("#scissorsId");
 
+var button = document.querySelector(".speaker");
+var sound = new Audio("sounds/song-test.wav");
+
+var score = document.querySelector(".score");
+var scoreCount = 0;
+
 var computerRoll = randomString();
 
 var playerRoll;
 var computerRoll;
 var result;
+
+var restartButton = document.createElement("button");
+
+restartButton.innerHTML = "Play Again";
+restartButton.className = "restart-button";
+
+var restartContainer = document.querySelector(".restartContainer");
+
+restartButton.addEventListener("click", function () {
+  console.log("Testing Restart Button");
+});
 
 rock.addEventListener("click", function () {
   playerRoll = rock.getAttribute("data-value");
@@ -33,9 +50,18 @@ scissors.addEventListener("click", function () {
 
 buttons.forEach(function (button) {
   button.addEventListener("click", function () {
-    buttons[0].remove();
-    buttons[1].remove();
-    buttons[2].remove();
+
+    // buttons[0].remove();
+    // buttons[1].remove();
+    // buttons[2].remove();
+
+
+    buttons[0].style.display = 'none';
+    buttons[1].style.display = 'none';
+    buttons[2].style.display = 'none';
+
+
+
 
     title.style.display = "none";
 
@@ -55,6 +81,14 @@ function countdown() {
     count--;
   } else {
     countdownStart.textContent = result;
+
+    if (result === "You win!") {
+      scoreCount++;
+      score.innerHTML = "Score: " + scoreCount;
+    }
+
+    restartContainer.appendChild(restartButton);
+
     clearInterval(intervalId);
   }
 }
@@ -128,3 +162,48 @@ function playHoverSound() {
 
   sound.play();
 }
+
+button.addEventListener("click", function () {
+  console.log("hello World");
+
+  if (button.classList.contains("fa-volume-xmark")) {
+    button.classList.remove("fa-volume-xmark");
+    button.classList.add("fa-volume-high");
+    sound.play();
+  } else {
+    button.classList.remove("fa-volume-high");
+    button.classList.add("fa-volume-xmark");
+    sound.pause();
+    sound.currentTime = 0;
+  }
+});
+
+function resetGame() {
+  // Reset the UI
+  countdownStart.textContent = "";
+  restartContainer.removeChild(restartButton);
+
+
+
+
+  rock.style.display = 'block'; 
+  paper.style.display = 'block';
+  scissors.style.display = 'block';
+
+  
+
+
+  // centerContainer.appendChild(rock);
+  // centerContainer.appendChild(paper);
+  // centerContainer.appendChild(scissors);
+
+  // title.style.display = "block";
+
+  // Reset game variables
+  count = 3;
+  computerRoll = randomString();
+  result = "";
+}
+
+// Modifying the restartButton click event to call resetGame
+restartButton.addEventListener("click", resetGame);
